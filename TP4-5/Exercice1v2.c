@@ -13,7 +13,6 @@ struct s_arg
     int nm;
 };
 
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 sem_t sem;
 
 void *thread(void *p){
@@ -50,8 +49,6 @@ int main(int argc, char const *argv[])
         printf("paramètre");
         exit(1);
     }
-
-    //pthread_mutex_init(&mutex, NULL);
 
     for (int i = 0; i<NBT; i++){
         struct s_arg* arg = malloc(sizeof(struct s_arg));
