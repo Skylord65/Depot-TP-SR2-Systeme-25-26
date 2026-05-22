@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <semaphore.h>
 #include <sys/time.h>
 #include <unistd.h>
 
@@ -13,6 +14,7 @@ struct s_arg
 };
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+sem_t sem;
 
 void *thread(void *p){
     pthread_t id = pthread_self();
@@ -22,19 +24,13 @@ void *thread(void *p){
     {
         int t = rand()%1000;
         usleep(t);
-        if(pthread_mutex_lock(&mutex)!=0) {
-            perror("mutex lock");
-            exit(1);
-        }
+        sem_wait(&sem);
         for(int j = 0; j<arg->nl;j++) {
-            printf("Afficheur %d (%llu), j'affiche ligne %d/%d du message %d/%d\n", arg->rang, id, j,arg->nl, i, arg->nm);
+            printf("Afficheur %d (%lu), j'affiche ligne %d/%d du message %d/%d\n", arg->rang, id, j,arg->nl, i, arg->nm);
         }
-        if(pthread_mutex_unlock(&mutex)!=0) {
-            perror("mutex unlock");
-            exit(1);
-        }
+        sem_post(&sem);
     }
-    printf("Afficheur %d (%llu), je me termine\n", arg->rang, id);
+    printf("Afficheur %d (%lu), je me termine\n", arg->rang, id);
     int *res = malloc(sizeof(int));
     *res = arg->rang;
     pthread_exit((void*)res);
@@ -47,14 +43,15 @@ int main(int argc, char const *argv[])
     int NBL = atoi(argv[3]);
 
     pthread_t ptid[NBT];
-    
+    sem_init(&sem, 0, 1);
+
     int *res = NULL;
     if(argc!=4) {
         printf("paramètre");
         exit(1);
     }
 
-    pthread_mutex_init(&mutex, NULL);
+    //pthread_mutex_init(&mutex, NULL);
 
     for (int i = 0; i<NBT; i++){
         struct s_arg* arg = malloc(sizeof(struct s_arg));
