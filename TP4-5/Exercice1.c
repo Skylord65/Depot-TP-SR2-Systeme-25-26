@@ -26,7 +26,7 @@ void *thread(void *p){
             exit(1);
         }
         for(int j = 0; j<arg->nl;j++) {
-            printf("Afficheur %d (%llu), j'affiche ligne %d/%d du message %d/%d\n", arg->rang, id, j,arg->nl, i, arg->nm);
+            printf("Afficheur %d (%lu), j'affiche ligne %d/%d du message %d/%d\n", arg->rang, id, j,arg->nl, i, arg->nm);
         }
         if(pthread_mutex_unlock(&mutex)!=0) {
             perror("mutex unlock");
@@ -34,12 +34,12 @@ void *thread(void *p){
         }
         usleep(t*100);
     }
-    printf("Afficheur %d (%llu), je me termine\n", arg->rang, id);
+    printf("Afficheur %d (%lu), je me termine\n", arg->rang, id);
     int *res = malloc(sizeof(int));
     *res = arg->rang;
     pthread_exit((void*)res);
 }
-
+// 
 int main(int argc, char const *argv[])
 {
     int NBT = atoi(argv[1]);
