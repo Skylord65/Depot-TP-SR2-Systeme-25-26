@@ -18,7 +18,7 @@ void *f_thread(void *p) {
     int operation = *(int*)p%2;
     for(int i = 0; i<NO; i++) {
         int montant = rand() % 10;
-        
+
         sem_wait(&sem);
         if(operation == 0) {
             // DEBIT
@@ -34,8 +34,6 @@ void *f_thread(void *p) {
             printf("credit %d solde %d\n", montant, SOLDE);
         }
         sem_post(&sem);
-
-        
 
         usleep(*cr);
         //printf("\tThread %d: Mon identificateur est %lu (délai : %d)\n",*(int *)p, pthread_self(), *cr); 
@@ -70,8 +68,6 @@ int main(int argc, char const *argv[])
         pthread_join(ptid[i], (void**)&res);
         //printf("Valeur retourné par le thread %ld = %d \n", ptid[i], *res);
     }
-
-
 
     printf("Solde = %d\n", SOLDE);
 
